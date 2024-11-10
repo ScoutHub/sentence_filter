@@ -2,6 +2,8 @@ import pandas as pd
 from langdetect import detect
 import json
 import random
+from unidecode import unidecode
+import re
 
 def load_json_data(path: str) -> list[str]:
     with open(path, 'r') as file:
@@ -31,8 +33,11 @@ def generate_trip_phrase():
         ville_arrivee = random.choice(villes).lower()
     phrases = [
         f"Je veux aller de {ville_depart} à {ville_arrivee}.",
+        f"Je suis à {ville_depart} et j'aimerais aller à {ville_arrivee}.",
+        f"Je suis à {ville_depart} et j'aimerais me rendre à {ville_arrivee}.",
         f"Je veux aller à {ville_arrivee} depuis {ville_depart}.",
         f"Je suis à {ville_arrivee} et je veux aller à {ville_depart}.",
+        f"Je voudrais aller à {ville_depart} depuis {ville_arrivee}.",
         f"Comment me rendre à {ville_arrivee} depuis {ville_depart} ?",
         f"Y a-t-il des trains de {ville_depart} à {ville_arrivee} ?",
         f"Je prévois de voyager de {ville_depart} à {ville_arrivee} demain.",
@@ -41,7 +46,10 @@ def generate_trip_phrase():
         f"Quel est le trajet de {ville_depart} à {ville_arrivee} ?",
         f"Voyage de {ville_depart} jusqu'à {ville_arrivee}",
     ]
-    return random.choice(phrases), ville_depart, ville_arrivee
+    phrase = random.choice(phrases).lower()
+    phrase = unidecode(phrase)
+    phrase = re.sub(r'[^\w\s]', '', phrase)
+    return phrase, ville_depart, ville_arrivee
 
 def generate_trip_phrase_with_intermediate():
     ville_depart = random.choice(villes).lower()
@@ -61,6 +69,8 @@ def generate_trip_phrase_with_intermediate():
 
     phrases = [
         f"Je veux aller de {ville_depart} à {ville_arrivee} en passant par #.",
+        f"Je suis à {ville_depart} et j'aimerais aller à {ville_arrivee} en passant par #.",
+        f"Je suis à {ville_depart} et j'aimerais me rendre à {ville_arrivee} en passant par #.",
         f"Comment me rendre à {ville_arrivee} depuis {ville_depart} en passant par #?",
         f"Y a-t-il des trains de {ville_depart} à {ville_arrivee} en passant par # ?",
         f"Je prévois de voyager de {ville_depart} à {ville_arrivee} en coupant par #",
@@ -93,12 +103,14 @@ def generate_trip_phrase_with_intermediate():
 
     detours = ','.join(villes_detour)
 
-    random_phrase = begin + end
+    random_phrase = (begin + end).lower()
+    random_phrase = unidecode(random_phrase)
+    random_phrase = re.sub(r'[^\w\s]', '', random_phrase)
     return random_phrase, ville_depart, ville_arrivee, detours
 
 data = []
 
-for _ in range(10000):
+for _ in range(7000):
     phrase, origine, destination = generate_trip_phrase()
     data.append((phrase, origine, destination))
 
