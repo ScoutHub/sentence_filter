@@ -19,12 +19,6 @@ phrases_incompletes = [
     "Le restaurant est loin", "Il y a une bonne ambiance à la fête", "Je ne sais pas quoi faire ce week-end"
 ]
 
-phrases_anglais = [
-    "Is there any train from Paris to London?", "How do I get from New York to Boston?",
-    "Is the train from Los Angeles to San Francisco available?", "Are there buses between Paris and Berlin?",
-    "I want to travel from Rome to Florence"
-]
-
 def generate_trip_phrase():
     ville_depart = random.choice(villes).lower()
     ville_arrivee = random.choice(villes).lower()
@@ -130,10 +124,5 @@ def detect_language(text):
         return 'NOT_FRENCH' if lang != 'fr' else 'FRENCH'
     except:
         return 'NOT_TRIP'
-
-# df['language'] = df['text'].apply(detect_language)
-
-# df['origin'] = df.apply(lambda x: 'NOT_FRENCH' if x['language'] == 'NOT_FRENCH' else x['origin'], axis=1)
-# df['destination'] = df.apply(lambda x: 'NOT_FRENCH' if x['language'] == 'NOT_FRENCH' else x['destination'], axis=1)
 
 df.to_csv("dataset.csv", ";")
